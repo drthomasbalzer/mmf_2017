@@ -1,11 +1,11 @@
 import numpy as np
-import math
 import matplotlib.pyplot as plt
+
+import mmf_2017_math_utilities as dist
 
 ###########
 ##### Demo of Quantile Transformation
 ###########
-
 
 ###########
 ##### Standard Sample First
@@ -30,30 +30,6 @@ def uniform_histogram(sz):
 
     plt.show()
 
-######
-## pdf and inverse distribution function of $Exp(\lambda)$-distribution
-######
-
-def pdf_exponential(_lambda, x):
-
-    return _lambda * np.exp(-_lambda * x)
-
-
-def inverse_cdf_exponential(_lambda, x):
-
-    return -1./_lambda * np.log(1-x)
-
-######
-## inverse distribution function of $B(1,p)$-distribution
-######
-
-def inverse_cdf_binomial(p, x):
-
-    if (x < 1-p):
-        return 0.
-    else:
-        return 1.
-
 #####
 ## Create distribution via Quantile Transform -- $B(1,p)$-distribution
 #####
@@ -70,7 +46,7 @@ def binomial_histogram(p, sz):
     #######
     sample = range(sz)
     for j in range(sz):
-        sample[j] = inverse_cdf_binomial(p,uni_sample[j])
+        sample[j] = dist.binomial_inverse_cdf(p,uni_sample[j])
 
     num_bins = 100
 
@@ -82,6 +58,11 @@ def binomial_histogram(p, sz):
     plt.title("Histogram of Binomial Sample with Success Probability={0}".format(p))
 
     plt.show()
+
+#####
+## Create distribution via Quantile Transform -- $Exp(\lambda)$ distribution
+#####
+
 
 def exponential_histogram(_lambda, sz):
 
@@ -95,7 +76,7 @@ def exponential_histogram(_lambda, sz):
     #######
     sample = range(sz)
     for j in range(sz):
-        sample[j] = inverse_cdf_exponential(_lambda,uni_sample[j])
+        sample[j] = dist.exponential_inverse_cdf(_lambda,uni_sample[j])
 
     num_bins = 50
 
@@ -109,7 +90,7 @@ def exponential_histogram(_lambda, sz):
     y = range(0,num_bins+1)
     ###### overlay the actual pdf
     for i in range(0,num_bins+1):
-         y[i] = pdf_exponential(_lambda, bins[i])
+         y[i] = dist.exponential_pdf(_lambda, bins[i])
 
     plt.plot(bins, y, 'r--')
     # # Tweak spacing to prevent clipping of ylabel

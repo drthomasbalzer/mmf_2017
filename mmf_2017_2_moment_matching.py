@@ -1,35 +1,11 @@
 import numpy as np
-import math
 import matplotlib.pyplot as plt
+
+import mmf_2017_math_utilities as dist
 
 ###########
 ##### Demo of Moment Matching
 ###########
-
-def normal_pdf(x, mu, sigma_sq):
-    y = 1. / np.sqrt(2 * np.pi * sigma_sq) * np.exp(- 0.5 * np.power(x - mu, 2) / sigma_sq)
-    return y
-
-######
-## inverse distribution function of $\{ \pm 1 \}$-distributed random variable
-######
-
-#####
-## Details of a random variable $X$ with $\mathbb{P}(X = 1) = p = 1 - \mathbb{P}(X = -1)$
-#####
-
-def inverse_cdf_symmetric_binomial(p, x):
-
-    if (x < 1-p):
-        return -1.
-    else:
-        return 1.
-
-def expectation_sym_bin(p):
-    return 2 * p - 1
-
-def variance_sym_bin(p):
-    return 4 * p * (1 - p)
 
 ###########
 ##### Standard Sample First
@@ -55,10 +31,10 @@ def moment_matching(p, sz_basket):
         expectation = expectation + weights[k]
         variance = variance + weights[k] * weights[k]
 
-    expectation = expectation * expectation_sym_bin(p)
-    variance = variance * variance_sym_bin(p)
+    expectation = expectation * dist.symmetric_binomial_expectation(p)
+    variance = variance * dist.symmetric_binomial_variance(p)
 
-    simulation = 10000
+    simulation = 50000
 
     outcome = range(simulation)
 
@@ -73,7 +49,7 @@ def moment_matching(p, sz_basket):
         #######
         sample = range(sz_basket)
         for j in range(sz_basket):
-            sample[j] = inverse_cdf_symmetric_binomial(p, uni_sample[j])
+            sample[j] = dist.symmetric_binomial_inverse_cdf(p, uni_sample[j])
 
         for m in range(sz_basket):
             outcome[k] = outcome[k] + weights[m] * sample[m]
@@ -90,7 +66,7 @@ def moment_matching(p, sz_basket):
     y = range(0,num_bins+1)
     ###### overlay the moment matched pdf
     for i in range(0,num_bins+1):
-         y[i] = normal_pdf(bins[i], expectation, variance)
+         y[i] = dist.normal_pdf(bins[i], expectation, variance)
 
     plt.plot(bins, y, 'r*')
     plt.show()

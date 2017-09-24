@@ -1,10 +1,6 @@
-import numpy as np
-import math
 import matplotlib.pyplot as plt
 
-def normal_pdf(x, mu, sigma_sq):
-    y = 1. / np.sqrt(2 * np.pi * sigma_sq) * np.exp(- 0.5 * np.power(x - mu, 2) / sigma_sq)
-    return y
+import mmf_2017_math_utilities as dist
 
 def normal_distribution_plot(mu, sigma_sq):
 
@@ -20,8 +16,8 @@ def normal_distribution_plot(mu, sigma_sq):
 
     for k in range(n):
         x_val[k] = t_min + step * k
-        y_val[k] = normal_pdf(x_val[k], mu, sigma_sq)
-        y_val_sn[k] = normal_pdf(x_val[k], 0, 1)
+        y_val[k] = dist.normal_pdf(x_val[k], mu, sigma_sq)
+        y_val_sn[k] = dist.standard_normal_pdf(x_val[k])
 
     #######
     ### prepare and show plot
