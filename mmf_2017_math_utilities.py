@@ -1,6 +1,7 @@
 import numpy as np
 import math
 
+
 ######
 ## PDF of normal distribution
 ######
@@ -11,6 +12,14 @@ def normal_pdf(x, mu, sigma_sq):
 
 def standard_normal_pdf(x):
     return normal_pdf(x, 0, 1)
+
+######
+## PDF of Maximum of Brownian Motion
+######
+
+def brownian_running_max_pdf(x, _time):
+    return 2 / np.sqrt(_time) * standard_normal_pdf(- x / np.sqrt(_time))
+    #* np.sqrt(2 / (np.pi * _time)) * np.exp( - 0.5 * x * x / _time)
 
 ######
 ## Exponential distribution with parameter $\lambda > 0$
@@ -40,7 +49,7 @@ def exponential_inverse_cdf(_lambda, x):
 
 def binomial_inverse_cdf(p, x):
 
-    if (x < 1 - p):
+    if (x <= 1 - p):
         return 0.
     else:
         return 1.
@@ -57,7 +66,7 @@ def binomial_variance(p):
 
 def symmetric_binomial_inverse_cdf(p, x):
 
-    if (x < 1-p):
+    if (x <= 1-p):
         return -1.
     else:
         return 1.
