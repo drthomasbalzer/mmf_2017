@@ -1,9 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-import mmf_2017_math_utilities as dist
-
-
 ### -- helper function - should be centralises
 def random_sample_normal(sz, _timestep):
 
