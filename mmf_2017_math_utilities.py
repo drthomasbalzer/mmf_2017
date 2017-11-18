@@ -1,6 +1,56 @@
 import numpy as np
 import math
 
+class Distribution:
+    def pdf(self, x):
+        return 0.
+
+    def cdf(self, x):
+        return 0.
+
+    def inverse_cdf(self, x):
+        return 0.
+
+
+class NormalDistribution(Distribution):
+    def __init__(self, mu, sigma_sq):
+        self.mu = mu
+        self.sigma_sq = sigma_sq
+
+    def pdf(self, x):
+        return normal_pdf(x, self.mu, self.sigma_sq)
+
+    def cdf(self, x):
+        ## P(X \leq x) = P(sigma * X_0 + mean \leq x) = P(X_0 \leq (x - mean)/sigma)
+        return standard_normal_cdf((x - self.mu) / np.sqrt(self.sigma_sq))
+
+    def expected_positive_exposure(self):
+        y = self.mu / np.sqrt(self.sigma_sq)
+        return self.mu * (1. - self.cdf(0.)) + np.sqrt(self.sigma_sq) * standard_normal_pdf(y)
+
+    def second_moment(self):
+        return self.mu * self.mu + self.sigma_sq
+
+    def excess_probability(self, strike):
+        return 1 - self.cdf(strike)
+
+
+class ExponentialDistribution(Distribution):
+    def __init__(self, _lambda):
+        self._lambda = _lambda
+
+    def pdf(self, x):
+        return exponential_pdf(self._lambda, x)
+
+    def cdf(self, x):
+        if (x < 0.):
+            return 0.
+        else:
+            return 1 - np.exp(-self._lambda * x)
+    
+    def inverse_cdf(self, x):
+        return exponential_inverse_cdf(self._lambda, x)
+
 
 ######
 ## PDF of normal distribution
