@@ -39,6 +39,28 @@ class itoProcessTH(itoProcessGeneral):
     def diffusion(self, _t, _x):
         return self._D * _x + self._d
 
+class itoProcessBMDrift(itoProcessTH):
+
+   def __init__(self, _a, _d, _x):
+
+       self._A = 0.
+       self._a = _a
+       self._D = 0.
+       self._d = _d
+
+       self.initial_value = _x
+
+class itoProcessGBM(itoProcessTH):
+
+   def __init__(self, _A, _D, _x):
+
+       self._A = _A
+       self._a = 0.
+       self._D = _D
+       self._d = 0.
+
+       self.initial_value = _x    
+    
 class itoProcessBrownianBridge(itoProcessGeneral):
 
     def __init__(self, _T, _b, _sigma, _x):
@@ -143,12 +165,12 @@ if __name__ == '__main__':
     max_time = 5
     timestep = 0.001
     paths = 6
+    
+    ### ito process of the form dX = a dt + b dB(t)
+    ito_bm = itoProcessBMDrift(.40, .2, 0)
 
     ### ito process of the form dX = X(a dt + b dB(t))
-    ito_exp = itoProcessTH(0.2, 0, 0.2, 0., 1)
-
-    ### ito process of the form dX = a dt + b dB(t)
-    ito_bm = itoProcessTH(0., 0.2, 0., 0.2, 0)
+    ito_exp = itoProcessGBM(0., 0.2, 1)
 
     ### ito process of the form dX = X(t) dt + b dB(t)
     ito_1 = itoProcessTH(0, 0.0, 0., 0.5, 1)
