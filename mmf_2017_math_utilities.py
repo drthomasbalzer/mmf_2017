@@ -1,5 +1,6 @@
 import numpy as np
 import math
+from scipy.stats import norm
 
 class Distribution:
     def pdf(self, x):
@@ -23,7 +24,7 @@ class NormalDistribution(Distribution):
     def cdf(self, x):
         ## P(X \leq x) = P(sigma * X_0 + mean \leq x) = P(X_0 \leq (x - mean)/sigma)
         return standard_normal_cdf((x - self.mu) / np.sqrt(self.sigma_sq))
-
+    
     def expected_positive_exposure(self):
         y = self.mu / np.sqrt(self.sigma_sq)
         return self.mu * (1. - self.cdf(0.)) + np.sqrt(self.sigma_sq) * standard_normal_pdf(y)
@@ -62,6 +63,9 @@ def normal_pdf(x, mu, sigma_sq):
 
 def standard_normal_pdf(x):
     return normal_pdf(x, 0, 1)
+
+def standard_normal_inverse_cdf(x):
+    return norm.ppf(x)
 
 ######
 ## PDF of Maximum of Brownian Motion
